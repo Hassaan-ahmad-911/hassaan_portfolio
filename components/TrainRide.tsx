@@ -27,13 +27,22 @@ type Geometry = {
   x: Float64Array;
 };
 
+/** Phones get their own track shape and cart sizing. */
+const PHONE = 640;
+
 /**
  * Track height at x: high on both sides, a long dip in the middle (like the reference coaster).
- * The dip is shallower on narrow screens so the slopes stay gentle on phones.
+ * On phones the dip has a wide flat bottom with short, gentle ramps at the edges, so the
+ * whole train fits on the flat and its letters stay upright and readable.
  */
 function trackY(x: number, w: number, h: number) {
   const u = x / w;
-  const dip = smoothstep(0.02, 0.34, u) - smoothstep(0.66, 0.98, u);
+  if (w < PHONE) {
+    // Phones: one soft dip spanning the full width (max slope ≈ 15°) — every cart stays readable.
+    const soft = u <= 0 || u >= 1 ? 0 : (1 - Math.cos(2 * Math.PI * u)) / 2;
+    return h * (0.3 + 0.17 * soft);
+  }
+  const dip = smoothstep(0.02, 0.32, u) - smoothstep(0.68, 0.98, u);
   const amp = Math.min(0.5, Math.max(0.22, (w / h) * 0.18));
   const base = 0.14 + (0.5 - amp) * 0.8;
   return h * (base + amp * dip);
@@ -159,17 +168,26 @@ export function TrainRide() {
 
   // One slot per character; a space becomes a gap instead of a cart.
   const slots = useMemo(() => [...profile.trainWords.toUpperCase()], []);
-  const cartSize = dims.w < 640 ? 32 : dims.w < 1024 ? 44 : 56;
-  const gap = Math.round(cartSize * (dims.w < 640 ? 0.32 : 0.18)); // extra room on tight phone curves
+  const phone = dims.w > 0 && dims.w < PHONE;
+  const carts = slots.filter((c) => c !== " ").length;
+  const spaces = slots.length - carts;
+  // Phones: carts as large as possible while the whole phrase still fits across the screen.
+  const cartSize = phone
+    ? Math.max(16, Math.min(32, Math.floor((dims.w * 0.96) / (carts + (carts - 1) * 0.1 + spaces * 0.45))))
+    : dims.w < 1024
+      ? 44
+      : 56;
+  const gap = Math.max(2, Math.round(cartSize * (phone ? 0.1 : 0.18)));
+  const spaceGap = phone ? cartSize * 0.45 : cartSize * 0.7;
 
   const offsets = useMemo(() => {
     let acc = 0;
     return slots.map((ch) => {
       const o = acc;
-      acc += ch === " " ? cartSize * 0.7 : cartSize + gap;
+      acc += ch === " " ? spaceGap : cartSize + gap;
       return o;
     });
-  }, [slots, cartSize, gap]);
+  }, [slots, cartSize, gap, spaceGap]);
   const trainLength = offsets[offsets.length - 1] + cartSize;
 
   useEffect(() => {
@@ -294,8 +312,8 @@ export function TrainRide() {
       aria-labelledby="ride-h"
       className={cn("relative border-t border-line", reduce ? "h-[100svh]" : "h-[260svh]")}
     >
-      <div className="sticky top-0 flex h-[100svh] flex-col overflow-hidden">
-        <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 px-4 pt-24 text-center sm:pt-28">
+      <div className="sticky top-0 flex h-[100svh] flex-col justify-center overflow-hidden pb-16 pt-20 sm:justify-start sm:pb-0 sm:pt-0">
+        <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 px-4 text-center sm:gap-5 sm:pt-28">
           <p className="inline-flex items-center gap-2 rounded-full border border-line-3 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.12em] text-muted">
             <span className="grid size-4 place-items-center rounded bg-fg font-sans text-[9px] font-bold text-ink">
               {profile.initials.slice(0, 1)}
@@ -307,9 +325,10 @@ export function TrainRide() {
           </h2>
         </div>
 
-        {/* Track + train */}
-        <div ref={areaRef} className="relative mt-auto h-[46%] w-full sm:h-[50%]">
-          <TrackArt w={dims.w} h={dims.h} />
+        {/* Track + train: fills the space between heading and buttons; compact and centred on phones */}
+        <div className="mt-8 flex min-h-0 flex-none sm:mt-0 sm:flex-1 sm:items-end">
+          <div ref={areaRef} className="relative h-[160px] w-full sm:h-[min(100%,520px)]">
+            <TrackArt w={dims.w} h={dims.h} />
           <div
             ref={trainRef}
             aria-hidden="true"
@@ -342,7 +361,7 @@ export function TrainRide() {
                     style={{
                       width: cartSize,
                       height: cartSize * 0.86,
-                      fontSize: cartSize * 0.5,
+                      fontSize: cartSize * (phone ? 0.6 : 0.5),
                       transform: "rotate(var(--lean, 0deg))",
                     }}
                   >
@@ -360,10 +379,12 @@ export function TrainRide() {
               ),
             )}
           </div>
+          </div>
         </div>
 
-        {/* Bottom bar: status/speed, actions, hint */}
-        <div className="absolute inset-x-0 bottom-24 z-10 mx-auto flex max-w-7xl sm:bottom-5 flex-wrap items-center justify-center gap-3 px-4 sm:justify-between sm:px-8">
+        {/* Bottom bar (in normal flow, so it never sits on the track). Extra bottom room on
+            phones keeps the buttons clear of the floating WhatsApp button. */}
+        <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-wrap items-center justify-center gap-3 px-4 pt-6 sm:justify-between sm:px-8 sm:pb-6 sm:pt-4">
           <p
             aria-hidden="true"
             className="hidden items-center gap-2 rounded-full border border-line-3 bg-ink/90 px-3 py-2 font-mono text-[11px] uppercase tracking-[0.1em] text-muted sm:inline-flex"

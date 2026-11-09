@@ -42,7 +42,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: "#0a0a0b",
-  colorScheme: "dark",
+  // color-scheme is set as "dark only" in <head> below (Next's option doesn't support it).
 };
 
 function PersonJsonLd() {
@@ -80,6 +80,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       suppressHydrationWarning
     >
       <head>
+        {/* "dark only": the site is already dark, so phone browsers' forced dark modes
+            (e.g. Samsung Internet) shouldn't recolour its white buttons and cards. */}
+        <meta name="color-scheme" content="dark only" />
         {/* Lets CSS hide scroll-reveal content only when JS can reveal it again. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
       </head>

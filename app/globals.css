@@ -83,7 +83,7 @@
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
-    color-scheme: dark;
+    color-scheme: dark only;
     -webkit-text-size-adjust: 100%;
   }
   body {
