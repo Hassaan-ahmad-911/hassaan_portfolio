@@ -1,9 +1,9 @@
 import Image from "next/image";
 import type { ComponentType, SVGProps } from "react";
 import { contact, profile } from "@/data/portfolio";
-import { cn } from "@/lib/site";
+import { cn, whatsappLink } from "@/lib/site";
 import { ContactForm } from "./ContactForm";
-import { Briefcase, Download, Github, Linkedin } from "./ui/Icons";
+import { Briefcase, Download, Github, Linkedin, Whatsapp } from "./ui/Icons";
 import { PulseDot } from "./ui/Primitives";
 import { Reveal } from "./ui/Reveal";
 import { DrawUnderline } from "./ui/DrawUnderline";
@@ -14,6 +14,11 @@ type Social = { label: string; href: string; icon: ComponentType<SVGProps<SVGSVG
 export function Contact({ standalone = false }: { standalone?: boolean }) {
   const socials: Social[] = (
     [
+      {
+        label: "WhatsApp",
+        href: contact.whatsapp ? whatsappLink(contact.whatsapp, contact.whatsappMessage) : "",
+        icon: Whatsapp,
+      },
       { label: "GitHub", href: contact.github, icon: Github },
       { label: "LinkedIn", href: contact.linkedin, icon: Linkedin },
       { label: "Upwork", href: contact.upwork, icon: Briefcase },
@@ -75,6 +80,14 @@ export function Contact({ standalone = false }: { standalone?: boolean }) {
                 className="relative self-start break-all pb-1.5 text-[clamp(1.25rem,2.4vw,1.625rem)] after:absolute after:inset-x-0 after:bottom-0 after:h-px after:origin-right after:scale-x-0 after:bg-fg after:transition-transform after:duration-500 after:ease-out-expo hover:after:origin-left hover:after:scale-x-100"
               >
                 {contact.email}
+              </a>
+            )}
+            {contact.whatsapp && (
+              <a
+                href={`tel:${contact.whatsapp.replace(/\s/g, "")}`}
+                className="-mt-3 inline-flex self-start font-mono text-sm text-muted hover:text-white"
+              >
+                {contact.whatsapp}
               </a>
             )}
 

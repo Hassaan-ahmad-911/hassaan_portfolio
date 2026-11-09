@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import { Header } from "@/components/Header";
 import { MotionProvider } from "@/components/MotionProvider";
 import { RevealObserver } from "@/components/RevealObserver";
+import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { contact, profile, seo } from "@/data/portfolio";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
@@ -57,6 +58,7 @@ function PersonJsonLd() {
     knowsAbout: ["Python", "Django", "Next.js", "React", "TypeScript", "Flutter", "RAG", "Computer vision"],
     ...(sameAs.length && { sameAs }),
     ...(contact.email && { email: `mailto:${contact.email}` }),
+    ...(contact.whatsapp && { telephone: contact.whatsapp.replace(/\s/g, "") }),
     ...(profile.university && { alumniOf: { "@type": "CollegeOrUniversity", name: profile.university } }),
     ...(profile.city && { address: { "@type": "PostalAddress", addressLocality: profile.city } }),
   };
@@ -95,6 +97,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main id="main" className="overflow-x-clip">
             {children}
           </main>
+          <WhatsAppButton />
         </MotionProvider>
       </body>
     </html>

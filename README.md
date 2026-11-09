@@ -1,4 +1,4 @@
-# Hassan Ahmad — Portfolio
+# Hassaan Ahmad — Portfolio
 
 Personal portfolio for a full stack developer (Django · Next.js · Flutter · AI).
 Built with **Next.js 16 (App Router)**, **TypeScript**, **Tailwind CSS v4** and **Framer Motion**.

@@ -56,28 +56,32 @@ export type Project = {
 /* ---------- Profile ---------- */
 
 export const profile = {
-  name: "Hassan Ahmad",
+  name: "Hassaan Ahmad",
   initials: "HA",
   role: "Full Stack Developer",
   /** Shown under your name in the hero */
   pitch:
-    "I build complete products, end to end — Django backends, modern web frontends and Flutter apps, with AI wired in where it earns its place.",
+    "I build web and mobile apps end to end — with AI built in.",
   /** The word(s) from the pitch to set in italic serif */
   pitchEmphasis: "end to end",
   available: true,
   availabilityLabel: "Available for work",
   openTo: "Freelance & full-time",
   experience: "3+ years",
-  cgpa: "3.5",
-  cgpaScale: "4.0",
+  /** Shown in the hero stats */
+  projectsCount: "15+",
   degree: "BS Computer Science",
   university: "COMSATS University Islamabad, Sahiwal Campus",
   city: "Okara, Pakistan",
   photo: {
     src: "/me.jpg",
-    alt: "Hassan Ahmad in a black blazer and white shirt, seated in an office",
+    /** Background-removed version used by the hero particle portrait (transparent WebP). */
+    cutout: "/me-cutout.webp",
+    alt: "Hassaan Ahmad in a black blazer and white shirt",
   },
-  bio: "I'm a full stack developer who takes products from database schema to the last hover state. Most of my backend work is Python and Django; on the front I build fast, accessible web interfaces, and on mobile I ship with Flutter. Lately I've been adding AI that does real work — retrieval-augmented chatbots and computer vision.",
+  /** Words on the scroll-driven train carts (spaces become a gap between carts). */
+  trainWords: "HASSAAN PORTFOLIO",
+  bio: "I take products from database to the last pixel — Django backends, fast web frontends, Flutter apps, and AI features like RAG chatbots and computer vision.",
   aboutHeading: { lead: "I care about the layer you see", emphasis: "and", tail: "the ones you don't." },
   replyTime: "Usually replies within a day",
 };
@@ -87,6 +91,10 @@ export const profile = {
 
 export const contact = {
   email: "hassaanahmad911@gmail.com",
+  /** WhatsApp number in international format — powers the floating button and contact links. */
+  whatsapp: "+92 327 8535225",
+  /** Message pre-filled when someone opens the chat. */
+  whatsappMessage: "Hi Hassaan, I saw your portfolio and would like to talk about a project.",
   github: "https://github.com/Hassaan-ahmad-911",
   linkedin: "https://www.linkedin.com/in/hassaan-ahmad-4b12b723a",
   upwork: "", // TODO: https://www.upwork.com/freelancers/…
@@ -145,7 +153,7 @@ export const pages: Record<
     lead: "Let's build",
     emphasis: "something.",
     intro: "Tell me what you're building and when you need it. I usually reply within a day.",
-    description: "Hire Hassan Ahmad for freelance or full-time work — web apps, Flutter apps and AI features.",
+    description: "Hire Hassaan Ahmad for freelance or full-time work — web apps, Flutter apps and AI features.",
   },
 };
 
@@ -475,7 +483,7 @@ export const journey = [
   {
     when: "Now",
     tag: "",
-    title: `CGPA ${profile.cgpa} — open to freelance & full-time`,
+    title: "Open to freelance & full-time work",
     body: "",
     current: true,
   },
@@ -488,11 +496,11 @@ export const contactNeeds = ["Web app", "Mobile app", "AI feature", "Website", "
 /* ---------- SEO ---------- */
 
 export const seo = {
-  title: "Hassan Ahmad — Full Stack Developer",
+  title: "Hassaan Ahmad — Full Stack Developer",
   description:
     "Full stack developer with 3+ years of experience building Django backends, Next.js frontends, Flutter apps and AI features like RAG chatbots and computer vision. Available for freelance and full-time work.",
   keywords: [
-    "Hassan Ahmad",
+    "Hassaan Ahmad",
     "full stack developer",
     "Django developer",
     "Next.js developer",

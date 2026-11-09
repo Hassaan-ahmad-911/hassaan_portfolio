@@ -25,7 +25,7 @@ function CodeCard() {
       {"  "}experience: {str(profile.experience)},
     </>,
     <>
-      {"  "}cgpa: <span className="text-white">{profile.cgpa}</span>,
+      {"  "}projects: {str(profile.projectsCount)},
     </>,
     <>
       {"  "}available: <span className="text-white">{String(profile.available)}</span>,
@@ -59,11 +59,10 @@ function CodeCard() {
 
 export function About() {
   const facts = [
-    { label: "Experience", value: profile.experience ? `${profile.experience} building for the web & mobile` : "" },
+    { label: "Experience", value: profile.experience },
+    { label: "Projects", value: profile.projectsCount },
     { label: "Education", value: profile.degree, sub: profile.university },
-    { label: "CGPA", value: `${profile.cgpa} / ${profile.cgpaScale}` },
-    { label: "Based in", value: profile.city ? `${profile.city} · works remote` : "" },
-    { label: "Open to", value: profile.openTo },
+    { label: "Based in", value: profile.city },
   ].filter((f) => f.value);
 
   return (

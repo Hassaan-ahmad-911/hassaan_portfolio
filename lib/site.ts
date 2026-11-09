@@ -6,6 +6,12 @@ export const siteUrl = (
     : "http://localhost:3000")
 ).replace(/\/$/, "");
 
+/** wa.me chat link for a phone number like "+92 327 8535225" (digits only in the URL). */
+export function whatsappLink(phone: string, message?: string) {
+  const digits = phone.replace(/\D/g, "");
+  return `https://wa.me/${digits}${message ? `?text=${encodeURIComponent(message)}` : ""}`;
+}
+
 /** Join class names, skipping falsy values. */
 export function cn(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(" ");

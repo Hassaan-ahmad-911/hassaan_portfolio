@@ -1,6 +1,6 @@
-import Image from "next/image";
 import type { CSSProperties } from "react";
-import { profile, projects } from "@/data/portfolio";
+import { ParticlePortrait } from "./ParticlePortrait";
+import { profile } from "@/data/portfolio";
 import { ArrowDown, ArrowRight } from "./ui/Icons";
 import { MagneticButton } from "./ui/MagneticButton";
 
@@ -41,13 +41,12 @@ function Pitch() {
 export function Hero() {
   const [first, ...rest] = profile.name.split(" ");
   const last = rest.join(" ");
-  const liveNames = projects
-    .filter((p) => p.status === "live")
-    .map((p) => p.name)
-    .join(" · ");
 
   return (
-    <section id="top" aria-label="Introduction" className="relative">
+    <section id="top" aria-label="Introduction" className="relative overflow-hidden">
+      {/* The particle canvas is portalled in here so dots can start anywhere in the hero */}
+      <div id="hero-particles" aria-hidden="true" className="pointer-events-none absolute inset-0" />
+
       {/* 12-column grid lines that draw down on load */}
       <div
         aria-hidden="true"
@@ -61,7 +60,7 @@ export function Hero() {
       <div className="relative mx-auto flex max-w-7xl flex-wrap items-end gap-14 px-4 pb-16 pt-14 sm:px-8 md:gap-16 md:pb-[72px] md:pt-24">
         <div className="flex min-w-0 flex-[999_1_560px] flex-col gap-8">
           <p className="eyebrow intro-fade" style={d(0.2)}>
-            fig. 01 — {profile.role} · Web · Mobile · AI
+            {profile.role}
             <span aria-hidden="true" className="ml-1.5 inline-block h-[13px] w-[7px] animate-blink bg-muted align-[-2px]" />
           </p>
 
@@ -89,67 +88,25 @@ export function Hero() {
             </MagneticButton>
           </div>
 
-          <dl className="intro-fade-up mt-2 flex flex-wrap border-t border-line" style={d(0.6)}>
+          <dl className="intro-fade-up mt-2 flex max-w-md flex-wrap gap-x-12 border-t border-line" style={d(0.6)}>
             {profile.experience && (
-              <div className="flex-[1_1_140px] pr-5 pt-[18px]">
+              <div className="pt-[18px]">
                 <dt className="eyebrow">Experience</dt>
-                <dd className="mt-1.5 text-[22px] font-medium">{profile.experience}</dd>
+                <dd className="mt-1.5 text-[28px] font-medium tracking-tight">{profile.experience}</dd>
               </div>
             )}
-            <div className="flex-[1_1_140px] pr-5 pt-[18px]">
-              <dt className="eyebrow">CGPA</dt>
-              <dd className="mt-1.5 text-[22px] font-medium">{profile.cgpa}</dd>
-            </div>
-            <div className="flex-[1_1_140px] pr-5 pt-[18px]">
-              <dt className="eyebrow">Shipped</dt>
-              <dd className="mt-1.5 text-[22px] font-medium">{projects.length} projects</dd>
-            </div>
-            {liveNames && (
-              <div className="flex-[1_1_140px] pr-5 pt-[18px]">
-                <dt className="eyebrow">Live demos</dt>
-                <dd className="mt-1.5 text-[22px] font-medium">{liveNames}</dd>
+            {profile.projectsCount && (
+              <div className="pt-[18px]">
+                <dt className="eyebrow">Projects</dt>
+                <dd className="mt-1.5 text-[28px] font-medium tracking-tight">{profile.projectsCount}</dd>
               </div>
             )}
           </dl>
         </div>
 
-        {/* Photo with the "exploded stack" plates behind it */}
-        <figure className="relative m-0 w-full max-w-[460px] flex-[1_1_400px] pb-16 pr-14">
-          <div
-            aria-hidden="true"
-            className="intro-plate absolute bottom-0 left-14 right-0 top-16 flex items-end justify-end rounded-lg border border-line-2 bg-[#0e0e10] px-3 pb-2.5"
-            style={{ ...d(0.95), "--plate-x": "-56px", "--plate-y": "-64px" } as CSSProperties}
-          >
-            <span className="font-mono text-[11px] text-subtle">L3 · DATA</span>
-          </div>
-          <div
-            aria-hidden="true"
-            className="intro-plate absolute bottom-8 left-7 right-7 top-8 flex items-end justify-end rounded-lg border border-line-3 bg-[#121214] px-3 pb-2"
-            style={{ ...d(0.85), "--plate-x": "-28px", "--plate-y": "-32px" } as CSSProperties}
-          >
-            <span className="font-mono text-[11px] text-subtle">L2 · LOGIC</span>
-          </div>
-
-          <div className="relative aspect-[4/5] overflow-hidden rounded-lg border border-line-4 bg-raised">
-            <div className="intro-zoom absolute inset-0">
-              <Image
-                src={profile.photo.src}
-                alt={profile.photo.alt}
-                fill
-                preload
-                sizes="(max-width: 768px) 92vw, 400px"
-                className="object-cover object-[50%_30%] grayscale contrast-[1.06]"
-              />
-            </div>
-            <span aria-hidden="true" className="intro-curtain absolute inset-0 z-10 bg-[#1a1a1d]" />
-            <span
-              aria-hidden="true"
-              className="intro-fade absolute bottom-3 left-3 z-10 rounded bg-ink/80 px-2 py-1 font-mono text-[11px]"
-              style={d(1)}
-            >
-              L1 · INTERFACE
-            </span>
-          </div>
+        {/* Particle portrait: dots fly in from the whole hero and assemble into the photo */}
+        <figure className="relative m-0 w-full max-w-[460px] flex-[1_1_400px] pb-16">
+          <ParticlePortrait />
 
           {/* Rotating "open to work" badge — its circular text is the link's name */}
           <a
@@ -173,7 +130,10 @@ export function Hero() {
           </a>
 
           {profile.city && (
-            <figcaption className="intro-fade absolute bottom-2.5 left-0 font-mono text-[11px] leading-relaxed text-subtle" style={d(1.1)}>
+            <figcaption
+              className="intro-fade absolute -top-9 right-0 text-right font-mono text-[11px] leading-relaxed text-subtle"
+              style={d(1.1)}
+            >
               {profile.name}
               <br />
               {profile.city} · Remote OK

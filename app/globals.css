@@ -154,6 +154,55 @@ html.js [data-reveal][data-shown]:not([data-done]) {
   transform: none;
 }
 
+/* ── Hero particle portrait ────────────────────────────────── */
+/* The real photo stays hidden while the particles show it (visible without JS). */
+.portrait-photo {
+  transition: opacity 0.8s var(--ease-out-expo);
+}
+html.js .portrait-photo[data-hidden="true"] {
+  opacity: 0;
+}
+
+/* ── Floating WhatsApp button ring ─────────────────────────── */
+@keyframes wa-ring {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+/* ── Project card entrance (keyed to the surrounding [data-reveal]) ── */
+/* Curtain wipes off the screenshot, the image settles from a zoom, text rises in. */
+.card-curtain {
+  transform: scaleY(0);
+  transform-origin: top;
+}
+html.js [data-reveal] .card-curtain {
+  transition: transform 1s var(--ease-in-out-quart) calc(var(--reveal-delay, 0s) + 0.2s);
+}
+html.js [data-reveal]:not([data-shown]) .card-curtain {
+  transform: scaleY(1);
+}
+html.js [data-reveal] .card-zoom {
+  transition: transform 1.4s var(--ease-out-expo) calc(var(--reveal-delay, 0s) + 0.2s);
+}
+html.js [data-reveal]:not([data-shown]) .card-zoom {
+  transform: scale(1.18);
+}
+html.js [data-reveal] .card-rise {
+  transition:
+    opacity 0.8s var(--ease-out-expo) calc(var(--reveal-delay, 0s) + var(--rise, 0s)),
+    transform 0.8s var(--ease-out-expo) calc(var(--reveal-delay, 0s) + var(--rise, 0s));
+}
+html.js [data-reveal]:not([data-shown]) .card-rise {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
 /* ── Load-in animations (CSS, so they start on first paint) ── */
 @keyframes intro-rise {
   from {
